@@ -1,0 +1,12 @@
+{
+    "bucket_name": "nydus",
+    "endpoint": "10.99.0.1:6379",
+    "access_key_id": "accesskey",
+    "access_key_secret": "secretkey",
+    "meta_prefix": "meta/",
+    "object_prefix": "nydus/",
+    "region": "us-east-1",
+    "scheme": "http",
+    "retry_limit": 5,
+    "timeout": 10
+}
