@@ -1,0 +1,38 @@
+{
+  "device": {
+      "backend": {
+          "type": "s3",
+          "config": {
+              "bucket_name": "nydus",
+              "endpoint": "10.99.0.1",
+              "access_key_id": "accesskey",
+              "access_key_secret": "secretkey",
+              "meta_prefix": "meta/",
+              "object_prefix": "nydus/",
+              "region": "auto",
+              "scheme": "http",
+              "retry_limit": 5,
+              "timeout": 10
+          }
+      },
+      "cache": {
+          "type": "blobcache",
+          "config": {
+              "work_dir": "/fscache/cache"
+          }
+      }
+  },
+  "batch_size": 1048576,
+  "amplify_io": 1048576,
+  "mode": "direct",
+  "digest_validate": false,
+  "iostats_files": false,
+  "enable_xattr": true,
+  "fs_prefetch": {
+    "enable": true,
+    "threads_count": 8,
+    "merging_size": 200000000,
+    "prefetch_all": true,
+    "bandwidth_rate": 0
+  }
+}

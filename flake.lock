@@ -1,0 +1,48 @@
+{
+  "nodes": {
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1759281824,
+        "narHash": "sha256-FIBE1qXv9TKvSNwst6FumyHwCRH3BlWDpfsnqRDCll0=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "5b5be50345d4113d04ba58c444348849f5585b4a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-25.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nydus": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1759346981,
+        "narHash": "sha256-ZQmprg+z0ffE1Az88DoEDfiUJEcC8aHygrIm/HNimUs=",
+        "owner": "markasoftware-tc",
+        "repo": "nydus-nix",
+        "rev": "cdf37e09e0bd55c025281fbbec51ed7fb1ebf567",
+        "type": "github"
+      },
+      "original": {
+        "owner": "markasoftware-tc",
+        "repo": "nydus-nix",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "nixpkgs": "nixpkgs",
+        "nydus": "nydus"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

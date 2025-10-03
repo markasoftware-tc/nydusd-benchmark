@@ -1,0 +1,7 @@
+[proxy_plugins]
+  [proxy_plugins.nydus]
+    type = "snapshot"
+    address = "/run/containerd-nydus/containerd-nydus-grpc.sock"
+
+[debug]
+  level = "DEBUG"
