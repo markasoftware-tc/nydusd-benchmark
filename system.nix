@@ -16,15 +16,27 @@ let latency = "30ms";
       echo 'Launching container shell (will remove on exit)'
       ${pkgs.nerdctl}/bin/nerdctl run --snapshotter=nydus -it --rm localhost:4999/nydus-test-container:latest
     '';
+    # ^^^ nerdctl always uses http for localhost, so we use the http port
+    minio-logs = pkgs.writeShellScriptBin "minio-logs" ''
+      machinectl shell minio ${pkgs.minio-client}/bin/mc alias set nydus-minio http://0.0.0.0:6379 accesskey secretkey
+      machinectl shell minio ${pkgs.minio-client}/bin/mc admin trace nydus-minio
+    '';
     in
 {
   virtualisation.vmVariant.virtualisation = {
-    # These are options under `virtualisation` that can only be set when 
+    # These are options under `virtualisation` that can only be set when in a VM, if provided on a normal nixos build they error out, so have to be in here.
     memorySize = 32768;
     cores = 4;
     graphics = false;
     # use tmpfs for everything
     diskImage = null;
+    forwardPorts = [
+      {
+        from = "host";
+        host.port = 2222;
+        guest.port = 22;
+      }
+    ];
   };
 
   users.users.nydus = {
@@ -32,12 +44,14 @@ let latency = "30ms";
     initialPassword = "password";
     extraGroups = [ "wheel" ];
   };
+  services.openssh.enable = true;
 
   environment.systemPackages = [
     pkgs.nerdctl
     pkgs.docker
     make-container
     launch-container
+    minio-logs
   ];
 
   security.pki.certificates = [ (builtins.readFile ./cert.pem) ];
@@ -62,6 +76,9 @@ let latency = "30ms";
     autoStart = true;
 
     config = {
+      environment.systemPackages = [
+        pkgs.minio-client
+      ];
       services.minio = {
         enable = true;
         listenAddress = "0.0.0.0:6379";
@@ -77,6 +94,7 @@ let latency = "30ms";
     };
   };
 
+  # https reverse proxy to the registry
   services.caddy = {
     enable = true;
     virtualHosts."localhost:5000".extraConfig = ''
