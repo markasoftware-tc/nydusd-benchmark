@@ -4,12 +4,13 @@
 
 let latency = "30ms";
     latencyJitter = "5ms";
+    image = "docker.io/pytorch/pytorch";
     make-container = pkgs.writeShellScriptBin "make-container" ''
       set -exuo pipefail
       echo 'Creating bucket'
       ${pkgs.rclone}/bin/rclone mkdir :s3:nydus --s3-provider=Other --s3-endpoint=http://10.99.0.1:6379 --s3-access-key-id=accesskey --s3-secret-access-key=secretkey
       echo 'Converting OCI image to nydus'
-      ${nydus.packages.${system}.nydusify}/bin/nydusify convert --source docker.io/ubuntu:24.04 --target localhost:5000/nydus-test-container --backend-type s3 --backend-config-file ${./backend.json}
+      ${nydus.packages.${system}.nydusify}/bin/nydusify convert --source ${image} --target localhost:5000/nydus-test-container --backend-type s3 --backend-config-file ${./backend.json}
     '';
     launch-container = pkgs.writeShellScriptBin "launch-container" ''
       set -exuo pipefail
@@ -25,11 +26,10 @@ let latency = "30ms";
 {
   virtualisation.vmVariant.virtualisation = {
     # These are options under `virtualisation` that can only be set when in a VM, if provided on a normal nixos build they error out, so have to be in here.
-    memorySize = 32768;
+    memorySize = 8192;
     cores = 4;
     graphics = false;
-    # use tmpfs for everything
-    diskImage = null;
+    diskSize = 32 * 1024;
     forwardPorts = [
       {
         from = "host";
